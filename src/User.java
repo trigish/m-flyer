@@ -1,9 +1,7 @@
-package common;
-
 public class User {
 
     private int id;
     private String name;
-    private closestServerId;
+    private int closestServerId;
 
 }
