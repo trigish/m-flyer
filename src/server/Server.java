@@ -1,4 +1,4 @@
-import java.lang.IllegalArgumentException;
+package server;
 
 public class Server {
 
@@ -36,13 +36,13 @@ public class Server {
         ipAddress = pIpAddress;
         active = false;
 
-        System.out.println("Created inactive Server " + name);
+        System.out.println("Created inactive server.Server " + name);
     }
 
     public Server getInstanceById(int pId) {
 
         if(pId < 0 || pId >= numServers) {
-            throw new java.lang.IllegalArgumentException("Invalid Server ID.");
+            throw new java.lang.IllegalArgumentException("Invalid server.Server ID.");
         }
 
         return allServers[pId];
@@ -50,11 +50,12 @@ public class Server {
 
     public static void start(int pServerId) {
 
-        server = Server.getInstanceById(pServerId);
+        //TODO
+        /*server = server.Server.getInstanceById(pServerId);
         server.active = true;
         server.broadcast(server);
 
-        System.out.println("Started Server " + server.getName() );
+        System.out.println("Started server.Server " + server.getName() );*/
     }
 
     public void broadcast(Server pServerUpdate) {
@@ -71,17 +72,34 @@ public class Server {
 
         if(args.length == 1)
         {
-            initDummyServers();
+            //TODO
+            //initDummyServers();
 
             int serverID = Integer.parseInt(args[0]);
             start(serverID);
         }
         else
         {
-            system.out.println("Error during server start. Invalid number of Arguments.");
+            System.out.println("Error during server start. Invalid number of Arguments.");
         }
 
 
     }
 
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
 }
