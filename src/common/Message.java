@@ -1,7 +1,8 @@
 package common;
 
 /**
- * Created by Tim on 25.04.2016.
+ * An object of this class represents a single blog post.
+ * It is not used to represent "special" messages needed for communications between servers (and/or clients).
  */
 public class Message {
 

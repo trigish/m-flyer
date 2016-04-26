@@ -2,15 +2,29 @@ package common;
 
 import java.util.*;
 
+/**
+ * An object of this class represents a person which is using the blog.
+ */
 public class User {
 
     private int id;
     private String name;
+
+    /**
+     * This user will always connect to the server with id closestServerId.
+     */
     private int closestServerId;
 
     private static LinkedList<User> allInstances = null;
 
-    public User(int pId, String pName, int pClosestServerId) {
+    /**
+     * All instances of this class are known before runtime. So this constructor is private.
+     * Use getAllInstances() as a public interface.
+     * @param pId
+     * @param pName
+     * @param pClosestServerId
+     */
+    private User(int pId, String pName, int pClosestServerId) {
         id = pId;
         name = pName;
         closestServerId = pClosestServerId;

@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 /**
- * Created by Tim on 25.04.2016.
+ * This graphical user interface will be shown on client side only.
  */
 public class ClientGUI {
     private JPanel contentPane;
@@ -42,8 +42,6 @@ public class ClientGUI {
         frame.pack();
         frame.setVisible(true);
 
-
-
         btnPost.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,8 +62,12 @@ public class ClientGUI {
         });
     }
 
+    /**
+     * Append a formatted message to current output.
+     * @param pMsg The message that should be appended.
+     */
     public void showMessage(Message pMsg) {
-        //append new message to current output
+
         try {
             HTMLDocument doc = (HTMLDocument) outputText.getStyledDocument();
             doc.insertAfterEnd(doc.getCharacterElement(doc.getLength()), "<font size=\"18\"><b>" + pMsg.getAuthor() + ":</b> " + pMsg.getText() + "</font><br>");
@@ -75,9 +77,13 @@ public class ClientGUI {
         }
     }
 
-    public void replaceMessages(List<Message> pMsgs) {
+    /**
+     * Remove all currently shown messages and show new ones instead.
+     * @param pMessages
+     */
+    public void replaceMessages(List<Message> pMessages) {
         outputText.setText("");
-        for(Message msg : pMsgs) {
+        for(Message msg : pMessages) {
             showMessage(msg);
         }
     }
