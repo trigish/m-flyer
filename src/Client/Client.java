@@ -19,6 +19,9 @@ public class Client {
         currentUser = User.getAllInstances().getFirst();
         currentServer = currentUser.getClosestServer();
         gui = new ClientGUI(this);
+
+        //load already existing messages
+        lookup();
     }
 
     /**
