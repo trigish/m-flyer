@@ -1,6 +1,7 @@
 package common;
 
 import java.util.*;
+import server.*;
 
 /**
  * An object of this class represents a person which is using the blog.
@@ -60,5 +61,9 @@ public class User {
 
     public int getClosestServerId() {
         return closestServerId;
+    }
+
+    public Server getClosestServer() {
+        return Server.getInstanceFromGlobalList(this.getClosestServerId());
     }
 }

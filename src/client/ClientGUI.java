@@ -62,6 +62,12 @@ public class ClientGUI {
                 controller.lookup();
             }
         });
+        comboUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.switchUser((User) comboUser.getSelectedItem());
+            }
+        });
     }
 
     /**

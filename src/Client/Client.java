@@ -14,7 +14,7 @@ public class Client {
 
     private Client() {
         currentUser = User.getAllInstances().getFirst();
-        currentServer = Server.getInstanceFromGlobalList(currentUser.getClosestServerId());
+        currentServer = currentUser.getClosestServer();
         gui = new ClientGUI(this);
     }
 
@@ -43,5 +43,25 @@ public class Client {
      */
     public void lookup() {
         gui.replaceMessages(currentServer.getLocalMessages());
+    }
+
+    /**
+     * Log off current user and log on new user. This might force a server change, too.
+     * @param pNewUser
+     */
+    public void switchUser(User pNewUser) {
+
+        User oldUser = currentUser;
+
+        //save new objects
+        currentUser = pNewUser;
+        currentServer = currentUser.getClosestServer();
+
+        //if this user prefers a different server, refresh the shown messages
+        if(oldUser.getClosestServerId() != currentServer.getId()) {
+            lookup();
+        }
+
+        System.out.println("Switched user from " + oldUser.getName() + " to " + currentUser.getName() + ".");
     }
 }
