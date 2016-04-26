@@ -69,7 +69,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         if(globalServerList == null) {
 
             //init all possible servers with dummy data
-            globalServerList = new Server[numServers];
+            globalServerList = new RpiServerAccess[numServers];
             globalServerList[ID_AMERICA] = new Server(ID_AMERICA, "America", "localhost"); //TODO IP
             globalServerList[ID_AUSTRALIA] = new Server(ID_AUSTRALIA, "Australia", "localhost"); //TODO IP
             globalServerList[ID_EUROPE] = new Server(ID_EUROPE, "Europe", "localhost"); //TODO IP
@@ -83,9 +83,13 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
                     globalServerList[i] = (RpiServerAccess) Naming.lookup(globalServerList[i].getRmiAddress());
                     serverStatus = "active";
                 }
-                catch(Exception e) {
-                    serverStatus = "inactive (" + e + ")";
+                catch(NotBoundException e) {
                     //do nothing here: in the case we can't connect to this server, we'll just keep the dummy element
+                    serverStatus = "inactive";
+                }
+                catch(Exception e) {
+                    //"real error"
+                    serverStatus = "inactive (" + e + ")";
                 }
 
                 System.out.println("Created " + serverStatus + " server " + globalServerList[i].getName());
