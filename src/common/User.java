@@ -1,12 +1,13 @@
 package common;
 
+import java.io.Serializable;
 import java.util.*;
 import server.*;
 
 /**
  * An object of this class represents a person which is using the blog.
  */
-public class User {
+public class User implements Serializable {
 
     private int id;
     private String name;
