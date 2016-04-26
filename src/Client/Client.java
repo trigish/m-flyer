@@ -3,6 +3,8 @@ package client;
 import common.*;
 import server.*;
 
+import java.rmi.*;
+
 /**
  * An object of this class is the main frame of the client-side program.
  */
@@ -10,7 +12,7 @@ public class Client {
 
     ClientGUI gui;
     User currentUser;
-    Server currentServer;
+    RpiServerAccess currentServer;
 
     private Client() throws Exception {
         currentUser = User.getAllInstances().getFirst();
@@ -35,7 +37,7 @@ public class Client {
      * Post a new message by requesting the server to save it as well as showing it in the gui.
      * @param pText
      */
-    public void postMessage(String pText) {
+    public void postMessage(String pText) throws RemoteException {
 
         Message msg = new Message(pText, currentUser);
         gui.showMessage(msg);
@@ -46,7 +48,7 @@ public class Client {
     /**
      * Receive all messages that are locally saved on the current server and show them in the gui.
      */
-    public void lookup() {
+    public void lookup() throws RemoteException {
         gui.replaceMessages(currentServer.getLocalMessages());
     }
 
@@ -81,7 +83,7 @@ public class Client {
      * Tell the current serer to sync its messages with pOtherServer.
      * @param pOtherServer
      */
-    public void syncCurrentServerWith(Server pOtherServer) {
+    public void syncCurrentServerWith(RpiServerAccess pOtherServer) throws RemoteException{
 
         //only do something if pOtherServer is really a different server (this makes gui handling easier)
         if(pOtherServer.getId() != currentServer.getId()) {

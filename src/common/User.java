@@ -63,7 +63,7 @@ public class User {
         return closestServerId;
     }
 
-    public Server getClosestServer() throws Exception {
+    public RpiServerAccess getClosestServer() throws Exception {
         return Server.getInstanceFromGlobalList(this.getClosestServerId());
     }
 }

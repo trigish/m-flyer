@@ -8,6 +8,7 @@ import javax.swing.text.html.HTMLDocument;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.rmi.RemoteException;
 import java.util.*;
 
 /**
@@ -60,19 +61,28 @@ public class ClientGUI {
         btnPost.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    //change gui
+                    String msgText = inputMsg.getText();
+                    inputMsg.setText("");
 
-                //change gui
-                String msgText = inputMsg.getText();
-                inputMsg.setText("");
-
-                //send new data
-                controller.postMessage(msgText);
+                    //send new data
+                    controller.postMessage(msgText);
+                }
+                catch (RemoteException eListener) {
+                    System.out.println(eListener.getMessage());
+                }
             }
         });
         btnLookup.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.lookup();
+                try {
+                    controller.lookup();
+                }
+                catch (RemoteException eListener) {
+                    System.out.println(eListener.getMessage());
+                }
             }
         });
         comboUser.addActionListener(new ActionListener() {
@@ -84,7 +94,12 @@ public class ClientGUI {
         syncButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.syncCurrentServerWith((Server) comboServer.getSelectedItem());
+                try {
+                    controller.syncCurrentServerWith((Server) comboServer.getSelectedItem());
+                }
+                catch (RemoteException eListener) {
+                    System.out.println(eListener.getMessage());
+                }
             }
         });
     }
@@ -120,7 +135,7 @@ public class ClientGUI {
      * This is not(!) the listener of the user combobox!
      * @param pNewServer
      */
-    public void switchServer(Server pNewServer) {
+    public void switchServer(RpiServerAccess pNewServer) {
         labelCurrentServer.setText("" + pNewServer);
 
         //TODO we might also block the server-related item in the combobox, but this isn't possible out of the box..

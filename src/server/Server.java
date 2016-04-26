@@ -32,7 +32,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Also this is static, there should be a separate data instance for each
      * program execution (on a different machine).
      */
-    private static Server[] globalServerList = null;
+    private static RpiServerAccess[] globalServerList = null;
 
     /**
      * Create new server object.
@@ -58,7 +58,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * @param pId The id of the requested server.
      * @return Either a dummy for the requested server or the "real" server (on a different machine).
      */
-    public static Server getInstanceFromGlobalList(int pId) throws Exception{
+    public static RpiServerAccess getInstanceFromGlobalList(int pId) throws Exception{
 
         //validate parameters
         if(pId < 0 || pId >= numServers) {
@@ -80,11 +80,11 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
             String serverStatus;
             for(int i=0; i < numServers; i++) {
                 try {
-                    globalServerList[i] = (Server)Naming.lookup(globalServerList[i].getRmiAddress());
+                    globalServerList[i] = (RpiServerAccess) Naming.lookup(globalServerList[i].getRmiAddress());
                     serverStatus = "active";
                 }
                 catch(Exception e) {
-                    serverStatus = "inactive (" + e.getMessage() + ")";
+                    serverStatus = "inactive (" + e + ")";
                     //do nothing here: in the case we can't connect to this server, we'll just keep the dummy element
                 }
 
@@ -95,7 +95,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         return globalServerList[pId];
     }
 
-    public static Server[] getAllInstances() throws Exception {
+    public static RpiServerAccess[] getAllInstances() throws Exception {
 
         //ensure intitialization
         getInstanceFromGlobalList(0);
@@ -111,35 +111,43 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      */
     public static void start(int pServerId) throws Exception {
 
-        Server oldServerObject = getInstanceFromGlobalList(pServerId);
 
-        //exit, if server is already running
-        //TODO actually there is no problem if the server is already running, but there is a problem if oldServerObject
-        //isn't a local object at all (but instead a remote object from another machine). The latter is indicated by
-        // the attribute "active".
-        if(oldServerObject.active) {
-            throw new Exception("Server with id " + pServerId + " could not be started, because it's already running!");
+        try {
+            //in order to start a machine, it must be a local instance instead of only a Rpi object => cast
+            Server oldServerObject = (Server) getInstanceFromGlobalList(pServerId);
+
+            //exit, if server is already running
+            //TODO actually there is no problem if the server is already running, but there is a problem if oldServerObject
+            //isn't a local object at all (but instead a remote object from another machine). The latter is indicated by
+            // the attribute "active".
+            if(oldServerObject.active) {
+                throw new Exception("Server with id " + pServerId + " could not be started, because it's already running!");
+            }
+
+            // bind server to the registry so it will be available in the network
+            Naming.rebind(oldServerObject.getRmiAddress(), oldServerObject);
+            System.out.println("New server address: " + oldServerObject.getRmiAddress());
+
+            //set to running
+            oldServerObject.active = true;
+
+            //inform all known servers (including oldServerObject itself) about its new status
+            oldServerObject.broadcast(oldServerObject);
+
+            //log message
+            System.out.println("Started server " + oldServerObject.getName() );
+
         }
-
-        // bind server to the registry so it will be available in the network
-        Naming.rebind(oldServerObject.getRmiAddress(), oldServerObject);
-        System.out.println("New server address: " + oldServerObject.getRmiAddress());
-
-        //set to running
-        oldServerObject.active = true;
-
-        //inform all known servers (including oldServerObject itself) about its new status
-        oldServerObject.broadcast(oldServerObject);
-
-        //log message
-        System.out.println("Started server " + oldServerObject.getName() );
+        catch(Exception e) {
+            System.out.println("Error during server start. Probably this server object is not a local one." + e.getMessage());
+        }
     }
 
     /**
      * This address needs to be used to lookup or bind this object to the Java RMI mechanism.
      * @return
      */
-    private String getRmiAddress() {
+    public String getRmiAddress() { //actually private, but public because of RpiServerAccess interface
         return "//" + this.ipAddress + "/server" + this.id;
     }
 
@@ -162,7 +170,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Replace the current version of pServerUpdate with the given one.
      * @param pServerUpdate
      */
-    private void updateServer(Server pServerUpdate) throws Exception {
+    public void updateServer(Server pServerUpdate) throws Exception { //actually private, but public because of RpiServerAccess interface {
         getInstanceFromGlobalList(0); //ensure that data has been initialized
         globalServerList[pServerUpdate.getId()] = pServerUpdate;
     }
@@ -176,7 +184,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         //TODO: remove following temp code lines
         if(args.length == 0) {
             args = new String[1];
-            args[0] = "0";
+            args[0] = "1";
         }
 
         if(args.length == 1)
@@ -264,7 +272,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Sync all local messages (bidirectionally) with pOtherServer.
      * @param pOtherServer
      */
-    public void syncWith(Server pOtherServer) {
+    public void syncWith(RpiServerAccess pOtherServer) {
         //TODO implement
     }
 }
