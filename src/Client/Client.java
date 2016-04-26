@@ -4,6 +4,7 @@ import common.*;
 import server.*;
 
 import java.rmi.*;
+import java.rmi.registry.LocateRegistry;
 
 /**
  * An object of this class is the main frame of the client-side program.
@@ -25,6 +26,16 @@ public class Client {
      * @param args
      */
     public static void main(String[] args) {
+
+        //init registry
+        try {
+            LocateRegistry.createRegistry(1099);
+            System.out.println("RMI registry inited.");
+        } catch (RemoteException e) {
+            //no problem. all init work is already done.
+            System.out.println("RMI registry already started.");
+        }
+
         try {
             Client client = new Client();
         }
