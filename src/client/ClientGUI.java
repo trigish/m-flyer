@@ -34,11 +34,21 @@ public class ClientGUI {
         controller = pController;
 
         //load available servers
-        comboServer.setModel(new DefaultComboBoxModel(Server.getAllInstances()));
+        try {
+            comboServer.setModel(new DefaultComboBoxModel(Server.getAllInstances()));
+        }
+        catch(Exception e) {
+            System.out.println("Error during setting up combobox." + e);
+        }
 
         //load available users
-        comboUser.setModel(new DefaultComboBoxModel(User.getAllInstances().toArray()));
-        switchServer(((User) comboUser.getSelectedItem()).getClosestServer());
+        try {
+            comboUser.setModel(new DefaultComboBoxModel(User.getAllInstances().toArray()));
+            switchServer(((User) comboUser.getSelectedItem()).getClosestServer());
+        }
+        catch(Exception e) {
+            System.out.println("Error during setting up combobox." + e);
+        }
 
         //create and show main frame
         JFrame frame = new JFrame("ClientGUI");

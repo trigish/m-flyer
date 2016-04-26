@@ -2,9 +2,11 @@ package server;
 
 import common.*;
 import java.rmi.*;
+import java.rmi.server.*;
+import java.rmi.registry.*;
 import java.util.*;
 
-public class Server {
+public class Server extends UnicastRemoteObject implements RpiServerAccess {
 
     private int id;
     private String name;
@@ -39,7 +41,8 @@ public class Server {
      * @param pName A user-friendly name for this server.
      * @param pIpAddress The ip address of this server.
      */
-    private Server(int pId, String pName, String pIpAddress) {
+    private Server(int pId, String pName, String pIpAddress) throws RemoteException {
+        super(0); //rmic
 
         //use given params
         id = pId;
@@ -48,8 +51,6 @@ public class Server {
         active = false;
 
         localMessages = new LinkedList<Message>();
-
-        System.out.println("Created inactive server " + name);
     }
 
     /**
@@ -57,7 +58,7 @@ public class Server {
      * @param pId The id of the requested server.
      * @return Either a dummy for the requested server or the "real" server (on a different machine).
      */
-    public static Server getInstanceFromGlobalList(int pId) {
+    public static Server getInstanceFromGlobalList(int pId) throws Exception{
 
         //validate parameters
         if(pId < 0 || pId >= numServers) {
@@ -69,27 +70,32 @@ public class Server {
 
             //init all possible servers with dummy data
             globalServerList = new Server[numServers];
-            globalServerList[ID_AMERICA] = new Server(ID_AMERICA, "America", "TODO IP");
-            globalServerList[ID_AUSTRALIA] = new Server(ID_AUSTRALIA, "Australia", "TODO IP");
-            globalServerList[ID_EUROPE] = new Server(ID_EUROPE, "Europe", "TODO IP");
-            globalServerList[ID_ASIA] = new Server(ID_ASIA, "Asia", "TODO IP");
-            globalServerList[ID_AFRICA] = new Server(ID_AFRICA, "Africa", "TODO IP");
+            globalServerList[ID_AMERICA] = new Server(ID_AMERICA, "America", "localhost"); //TODO IP
+            globalServerList[ID_AUSTRALIA] = new Server(ID_AUSTRALIA, "Australia", "localhost"); //TODO IP
+            globalServerList[ID_EUROPE] = new Server(ID_EUROPE, "Europe", "localhost"); //TODO IP
+            globalServerList[ID_ASIA] = new Server(ID_ASIA, "Asia", "localhost"); //TODO IP
+            globalServerList[ID_AFRICA] = new Server(ID_AFRICA, "Africa", "localhost"); //TODO IP
 
             //try to replace each dummy server by the real one
+            String serverStatus;
             for(int i=0; i < numServers; i++) {
                 try {
                     globalServerList[i] = (Server)Naming.lookup(globalServerList[i].getRmiAddress());
+                    serverStatus = "active";
                 }
                 catch(Exception e) {
+                    serverStatus = "inactive (" + e.getMessage() + ")";
                     //do nothing here: in the case we can't connect to this server, we'll just keep the dummy element
                 }
+
+                System.out.println("Created " + serverStatus + " server " + globalServerList[i].getName());
             }
         }
 
         return globalServerList[pId];
     }
 
-    public static Server[] getAllInstances() {
+    public static Server[] getAllInstances() throws Exception {
 
         //ensure intitialization
         getInstanceFromGlobalList(0);
@@ -115,7 +121,11 @@ public class Server {
             throw new Exception("Server with id " + pServerId + " could not be started, because it's already running!");
         }
 
-        //just set to running
+        // bind server to the registry so it will be available in the network
+        Naming.rebind(oldServerObject.getRmiAddress(), oldServerObject);
+        System.out.println("New server address: " + oldServerObject.getRmiAddress());
+
+        //set to running
         oldServerObject.active = true;
 
         //inform all known servers (including oldServerObject itself) about its new status
@@ -139,7 +149,12 @@ public class Server {
      */
     private void broadcast(Server pServerUpdate) {
         for(int i=0;i < numServers; i++) {
-            getInstanceFromGlobalList(i).updateServer(pServerUpdate);
+            try {
+                getInstanceFromGlobalList(i).updateServer(pServerUpdate);
+            }
+            catch(Exception e) {
+                System.out.println("Error during server broadcast.");
+            }
         }
     }
 
@@ -147,7 +162,7 @@ public class Server {
      * Replace the current version of pServerUpdate with the given one.
      * @param pServerUpdate
      */
-    private void updateServer(Server pServerUpdate) {
+    private void updateServer(Server pServerUpdate) throws Exception {
         getInstanceFromGlobalList(0); //ensure that data has been initialized
         globalServerList[pServerUpdate.getId()] = pServerUpdate;
     }
@@ -158,9 +173,25 @@ public class Server {
      */
     public static void main(String[] args) {
 
+        //TODO: remove following temp code lines
+        if(args.length == 0) {
+            args = new String[1];
+            args[0] = "0";
+        }
+
         if(args.length == 1)
         {
             try {
+
+                //init registry
+                try {
+                    LocateRegistry.createRegistry(1099);
+                    System.out.println("RMI registry inited.");
+                } catch (RemoteException e) {
+                    //no problem. all init work is already done.
+                    System.out.println("RMI registry already started.");
+                }
+
                 int serverID = Integer.parseInt(args[0]);
                 Server.start(serverID);
             }

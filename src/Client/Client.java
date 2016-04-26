@@ -12,7 +12,7 @@ public class Client {
     User currentUser;
     Server currentServer;
 
-    private Client() {
+    private Client() throws Exception {
         currentUser = User.getAllInstances().getFirst();
         currentServer = currentUser.getClosestServer();
         gui = new ClientGUI(this);
@@ -23,7 +23,12 @@ public class Client {
      * @param args
      */
     public static void main(String[] args) {
-        Client client = new Client();
+        try {
+            Client client = new Client();
+        }
+        catch(Exception e) {
+            System.out.println("Error during Client runtime. " + e.getMessage());
+        }
     }
 
     /**
@@ -54,16 +59,22 @@ public class Client {
         User oldUser = currentUser;
 
         //save new objects
-        currentUser = pNewUser;
-        currentServer = currentUser.getClosestServer();
+        try {
+            currentUser = pNewUser;
+            currentServer = currentUser.getClosestServer();
 
-        //if this user prefers a different server, refresh the shown messages
-        if(oldUser.getClosestServerId() != currentServer.getId()) {
-            gui.switchServer(currentServer);
-            lookup();
+            //if this user prefers a different server, refresh the shown messages
+            if (oldUser.getClosestServerId() != currentServer.getId()) {
+                gui.switchServer(currentServer);
+                lookup();
+            }
+
+            System.out.println("Switched user from " + oldUser.getName() + " to " + currentUser.getName() + ".");
         }
-
-        System.out.println("Switched user from " + oldUser.getName() + " to " + currentUser.getName() + ".");
+        catch(Exception e) {
+            System.out.println("Error during user switching. " + e.getMessage());
+            switchUser(oldUser);
+        }
     }
 
     /**
