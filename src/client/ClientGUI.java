@@ -24,6 +24,8 @@ public class ClientGUI {
     private JComboBox comboServer;
     private JButton btnLookup;
     private JButton btnPost;
+    private JLabel labelCurrentServer;
+    private JButton syncButton;
 
     private Client controller;
 
@@ -31,11 +33,12 @@ public class ClientGUI {
 
         controller = pController;
 
-        //load available users
-        comboUser.setModel(new DefaultComboBoxModel(User.getAllInstances().toArray()));
-
         //load available servers
         comboServer.setModel(new DefaultComboBoxModel(Server.getAllInstances()));
+
+        //load available users
+        comboUser.setModel(new DefaultComboBoxModel(User.getAllInstances().toArray()));
+        switchServer(((User) comboUser.getSelectedItem()).getClosestServer());
 
         //create and show main frame
         JFrame frame = new JFrame("ClientGUI");
@@ -68,6 +71,12 @@ public class ClientGUI {
                 controller.switchUser((User) comboUser.getSelectedItem());
             }
         });
+        syncButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.syncCurrentServerWith((Server) comboServer.getSelectedItem());
+            }
+        });
     }
 
     /**
@@ -94,5 +103,16 @@ public class ClientGUI {
         for(Message msg : pMessages) {
             showMessage(msg);
         }
+    }
+
+    /**
+     * Shows the name of the newly-selected server.
+     * This is not(!) the listener of the user combobox!
+     * @param pNewServer
+     */
+    public void switchServer(Server pNewServer) {
+        labelCurrentServer.setText("" + pNewServer);
+
+        //TODO we might also block the server-related item in the combobox, but this isn't possible out of the box..
     }
 }

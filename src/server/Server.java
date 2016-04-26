@@ -228,4 +228,12 @@ public class Server {
     public String toString() {
         return this.name + " (" + this.id + " , " + this.ipAddress + ")";
     }
+
+    /**
+     * Sync all local messages (bidirectionally) with pOtherServer.
+     * @param pOtherServer
+     */
+    public void syncWith(Server pOtherServer) {
+        //TODO implement
+    }
 }

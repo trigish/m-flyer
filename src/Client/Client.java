@@ -59,9 +59,27 @@ public class Client {
 
         //if this user prefers a different server, refresh the shown messages
         if(oldUser.getClosestServerId() != currentServer.getId()) {
+            gui.switchServer(currentServer);
             lookup();
         }
 
         System.out.println("Switched user from " + oldUser.getName() + " to " + currentUser.getName() + ".");
+    }
+
+    /**
+     * Tell the current serer to sync its messages with pOtherServer.
+     * @param pOtherServer
+     */
+    public void syncCurrentServerWith(Server pOtherServer) {
+
+        //only do something if pOtherServer is really a different server (this makes gui handling easier)
+        if(pOtherServer.getId() != currentServer.getId()) {
+
+            //send actual request
+            currentServer.syncWith(pOtherServer);
+
+            //reload merged messages
+            lookup();
+        }
     }
 }
