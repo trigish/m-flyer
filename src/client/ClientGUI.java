@@ -117,7 +117,7 @@ public class ClientGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    controller.syncCurrentServerWith((Server) comboServer.getSelectedItem());
+                    controller.syncCurrentServerWith((RpiServerAccess) comboServer.getSelectedItem());
                 }
                 catch (RemoteException eListener) {
                     System.out.println(eListener.getMessage());
