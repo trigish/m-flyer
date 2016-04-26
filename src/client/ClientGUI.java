@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.text.html.HTMLDocument;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Component;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -36,7 +37,28 @@ public class ClientGUI {
 
         //load available servers
         try {
+            comboServer.setRenderer(new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList list,
+                                                              Object value,
+                                                              int index,
+                                                              boolean isSelected,
+                                                              boolean cellHasFocus) {
+                    try {
+                        RpiServerAccess server = (RpiServerAccess) value;
+                        value = server.getTextLine();
+                    }
+                    catch(Exception e) {
+                        System.out.println(e);
+                    }
+
+                    return super.getListCellRendererComponent(list, value,
+                            index, isSelected, cellHasFocus);
+                }
+            });
             comboServer.setModel(new DefaultComboBoxModel(Server.getAllInstances()));
+            comboServer.updateUI();
+
         }
         catch(Exception e) {
             System.out.println("Error during setting up combobox." + e);
@@ -136,7 +158,12 @@ public class ClientGUI {
      * @param pNewServer
      */
     public void switchServer(RpiServerAccess pNewServer) {
-        labelCurrentServer.setText("" + pNewServer);
+        try {
+            labelCurrentServer.setText("" + pNewServer.getTextLine());
+        }
+        catch (Exception e){
+
+        }
 
         //TODO we might also block the server-related item in the combobox, but this isn't possible out of the box..
     }

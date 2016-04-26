@@ -188,7 +188,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         //TODO: remove following temp code lines
         if(args.length == 0) {
             args = new String[1];
-            args[0] = "1";
+            args[0] = "0";
         }
 
         if(args.length == 1)
@@ -237,7 +237,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Get the ip address of this server.
      * @return
      */
-    public String getIpAddress() {
+    public String getIpAddress() throws RemoteException {
         return ipAddress;
     }
 
@@ -269,7 +269,26 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
     }
 
     public String toString() {
-        return this.name + " (" + this.id + " , " + this.ipAddress + ")";
+
+        String str;
+        try{
+            str = getTextLine();
+        }
+        catch (Exception e)
+        {
+            str = super.toString();
+        }
+
+        return str;
+    }
+
+    /**
+     * This method is just a "copy" of the toString method.
+     * It's needed because the real toString method is not available in the RpiServerAccess.
+     * @return
+     */
+    public String getTextLine() throws RemoteException {
+        return this.getName() + " (" + this.getId() + " , " + this.getIpAddress() + ")";
     }
 
     /**
