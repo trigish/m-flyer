@@ -10,7 +10,6 @@ public class Server {
     private String name;
     private String ipAddress;
     private boolean active;
-    private Server[] localServerList;
     private LinkedList<Message> localMessages;
 
     public final static int ID_AMERICA = 0;
@@ -88,6 +87,14 @@ public class Server {
         }
 
         return globalServerList[pId];
+    }
+
+    public static Server[] getAllInstances() {
+
+        //ensure intitialization
+        getInstanceFromGlobalList(0);
+
+        return globalServerList;
     }
 
     /**
@@ -216,5 +223,9 @@ public class Server {
      */
     public LinkedList<Message> getLocalMessages() {
         return this.localMessages;
+    }
+
+    public String toString() {
+        return this.name + " (" + this.id + " , " + this.ipAddress + ")";
     }
 }

@@ -1,6 +1,7 @@
 package client;
 
 import common.*;
+import server.*;
 
 import javax.swing.*;
 import javax.swing.text.html.HTMLDocument;
@@ -33,7 +34,8 @@ public class ClientGUI {
         //load available users
         comboUser.setModel(new DefaultComboBoxModel(User.getAllInstances().toArray()));
 
-        //TODO load available servers
+        //load available servers
+        comboServer.setModel(new DefaultComboBoxModel(Server.getAllInstances()));
 
         //create and show main frame
         JFrame frame = new JFrame("ClientGUI");
