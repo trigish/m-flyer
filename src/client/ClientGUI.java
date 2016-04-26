@@ -159,7 +159,7 @@ public class ClientGUI {
      */
     public void switchServer(RpiServerAccess pNewServer) {
         try {
-            labelCurrentServer.setText("" + pNewServer.getTextLine());
+            labelCurrentServer.setText("" + pNewServer.getTextLine() + ", RMI " + (pNewServer instanceof Server ? "off" : "on"));
         }
         catch (Exception e){
 
