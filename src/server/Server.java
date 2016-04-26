@@ -1,5 +1,7 @@
 package server;
 
+import common.*;
+
 public class Server {
 
     public final int ID_AMERICA = 0;
