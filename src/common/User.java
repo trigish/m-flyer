@@ -36,4 +36,15 @@ public class User {
         return this.name + " (" + this.id + ")";
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getClosestServerId() {
+        return closestServerId;
+    }
 }

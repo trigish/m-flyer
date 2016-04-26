@@ -1,15 +1,18 @@
 package client;
 
 import common.*;
+import server.*;
 
 public class Client {
 
     ClientGUI gui;
     User currentUser;
+    Server currentServer;
 
     public Client() {
 
         currentUser = User.getAllInstances().getFirst();
+        currentServer = Server.getInstanceFromGlobalList(currentUser.getClosestServerId());
         gui = new ClientGUI(this);
     }
 
@@ -22,12 +25,11 @@ public class Client {
         Message msg = new Message(pText, currentUser);
         gui.showMessage(msg);
 
-        //TODO implement
+        currentServer.addMessage(msg);
     }
 
     public void lookup() {
-        //TODO implement
-        //gui.replaceMessages();
+        gui.replaceMessages(currentServer.getLocalMessages());
     }
 
 }
