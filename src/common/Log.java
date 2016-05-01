@@ -19,6 +19,11 @@ public class Log {
 		server = pServer;
 	}
 
+	public List<Event> getEvents() {
+		return ls2d;
+	}
+
+
    public void handleEvent(Event event) {
       if (event.isLocal(server.getId())) {
           ls2d.add(event);

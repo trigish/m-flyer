@@ -309,9 +309,27 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
     public void syncWith(RpiServerAccess pOtherServer) throws RemoteException {
 
         List<Message> unknownEvents = pOtherServer.getUnknownEvents(this);
-
         combineRemoteTT(pOtherServer);
+        //TODO start garbage collection
+    }
 
+    /**
+     * Get all events stored in the local log, that might not be stored in the log of pRequestingServer.
+     * @param pRequestingServer
+     * @return
+     */
+    private List<Event> getUnknownEvents(RpiServerAccess pRequestingServer) throws RemoteException {
+
+        LinkedList<Event> eventsToSend = new LinkedList<Event>();
+        int reqId = pRequestingServer.getId();
+
+        for(Event e : log.getEvents()) {
+            if(tt[reqId][e.getServer().getId()] < e.getClock()) {
+                eventsToSend.add(e);
+            }
+        }
+
+        return eventsToSend;
     }
 
     private void combineRemoteTT (RpiServerAccess pRemoteServer) throws RemoteException {

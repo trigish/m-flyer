@@ -18,6 +18,10 @@ public class Event {
 		clock = pServer.getLocalTime();
 	}
 
+	public RpiServerAccess getServer() {
+		return server;
+	}
+
 
 	public boolean isLocal (int cmpSiteID) {
 		if (cmpSiteID == msg.getAuthor().getClosestServerId()) {
