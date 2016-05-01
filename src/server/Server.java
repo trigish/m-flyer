@@ -191,12 +191,6 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
      */
     public static void main(String[] args) {
 
-        //TODO: remove following temp code lines
-        if(args.length == 0) {
-            args = new String[1];
-            args[0] = "2";
-        }
-
         if(args.length == 1)
         {
             try {
