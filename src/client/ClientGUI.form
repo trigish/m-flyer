@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="contentPane" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="1228" height="700"/>
+      <xy x="20" y="20" width="1228" height="730"/>
     </constraints>
     <properties>
       <enabled value="true"/>
@@ -19,19 +19,26 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="e3b89" class="javax.swing.JTextPane" binding="outputText">
+          <scrollpane id="5ba49">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="1200" height="500"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="300"/>
               </grid>
             </constraints>
-            <properties>
-              <background color="-1"/>
-              <contentType value="text/html"/>
-              <editable value="false"/>
-              <font size="22"/>
-            </properties>
-          </component>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="e3b89" class="javax.swing.JTextPane" binding="outputText">
+                <constraints/>
+                <properties>
+                  <background color="-1"/>
+                  <contentType value="text/html"/>
+                  <editable value="false"/>
+                  <font size="22"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
       <grid id="3349d" binding="centeredRow" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -42,16 +49,23 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="c331" class="javax.swing.JTextPane" binding="inputMsg">
+          <scrollpane id="3fc8e">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="100"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="100"/>
               </grid>
             </constraints>
-            <properties>
-              <font size="22"/>
-            </properties>
-          </component>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="c331" class="javax.swing.JTextPane" binding="inputMsg">
+                <constraints/>
+                <properties>
+                  <font size="22"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
       <grid id="3e8c8" binding="lastRow" layout-manager="GridLayoutManager" row-count="1" column-count="10" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -130,7 +144,7 @@
             </constraints>
             <properties>
               <font size="22"/>
-              <text value="&lt;- Sync -&gt;"/>
+              <text value="&lt;- Sync"/>
             </properties>
           </component>
           <component id="50120" class="javax.swing.JLabel">

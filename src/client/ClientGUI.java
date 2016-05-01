@@ -78,6 +78,7 @@ public class ClientGUI {
         frame.setContentPane(this.contentPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setMinimumSize(frame.getSize());
         frame.setVisible(true);
 
         btnPost.addActionListener(new ActionListener() {
