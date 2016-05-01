@@ -2,15 +2,18 @@ package common;
 
 import server.*;
 
-public class Event {
+import java.io.Serializable;
+import java.rmi.RemoteException;
+
+public class Event implements Serializable {
 	private int clock;
 	private Message msg;
-	private Server server; // == msg.getAuthor().getClosestServer()
+	private RmiServerAccess server; // == msg.getAuthor().getClosestServer()
 
 	//List<List<String>> ls2d = new ArrayList<List<String>>();
 	//tt = new String [3][3];
 
-	public Event (Message pMsg, Server pServer) {
+	public Event (Message pMsg, RmiServerAccess pServer) throws RemoteException {
 		msg = pMsg;
 		server = pServer;
 		clock = pServer.getLocalTime();

@@ -259,7 +259,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
      * Add a newly posted message to the local memory.
      * @param pMsg
      */
-    public void addMessage(Message pMsg) {
+    public void addMessage(Message pMsg) throws RemoteException {
 
         //store the message locally
         localMessages.add(pMsg);
@@ -311,7 +311,10 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
 
         List<Event> unknownEvents = pOtherServer.getUnknownEvents(this);
         for(Event newEvent : unknownEvents) {
-            log.handleEvent(newEvent);
+            if(!log.getEvents().contains(newEvent)) {
+                log.handleEvent(newEvent);
+                localMessages.add(newEvent.getMsg());
+            }
         }
 
         combineRemoteTT(pOtherServer);
@@ -329,9 +332,8 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         int reqId = pRequestingServer.getId();
 
         for(Event e : log.getEvents()) {
-            if(tt[reqId][e.getServer().getId()] < e.getClock() && !log.getEvents().contains(e)) {
+            if(tt[reqId][e.getServer().getId()] < e.getClock()) {
                 eventsToSend.add(e);
-                localMessages.add(e.getMsg());
             }
         }
 
@@ -360,7 +362,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         return tt;
     }
 
-    public int getLocalTime() {
+    public int getLocalTime() throws RemoteException {
         return tt[id][id];
     }
 }
