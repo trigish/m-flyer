@@ -167,10 +167,11 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
     private void broadcast(Server pServerUpdate) {
         for(int i=0;i < numServers; i++) {
             try {
-                getInstanceFromGlobalList(i).updateServer(pServerUpdate);
+                RpiServerAccess other = getInstanceFromGlobalList(i);
+                other.updateServer(pServerUpdate);
             }
             catch(Exception e) {
-                System.out.println("Error during server broadcast.");
+                System.out.println("Error during server broadcast." + e);
             }
         }
     }
@@ -193,7 +194,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         //TODO: remove following temp code lines
         if(args.length == 0) {
             args = new String[1];
-            args[0] = "0";
+            args[0] = "2";
         }
 
         if(args.length == 1)
@@ -308,7 +309,11 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      */
     public void syncWith(RpiServerAccess pOtherServer) throws RemoteException {
 
-        List<Message> unknownEvents = pOtherServer.getUnknownEvents(this);
+        List<Event> unknownEvents = pOtherServer.getUnknownEvents(this);
+        for(Event newEvent : unknownEvents) {
+            log.handleEvent(newEvent);
+        }
+
         combineRemoteTT(pOtherServer);
         //TODO start garbage collection
     }
@@ -318,14 +323,15 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * @param pRequestingServer
      * @return
      */
-    private List<Event> getUnknownEvents(RpiServerAccess pRequestingServer) throws RemoteException {
+    public List<Event> getUnknownEvents(RpiServerAccess pRequestingServer) throws RemoteException {
 
         LinkedList<Event> eventsToSend = new LinkedList<Event>();
         int reqId = pRequestingServer.getId();
 
         for(Event e : log.getEvents()) {
-            if(tt[reqId][e.getServer().getId()] < e.getClock()) {
+            if(tt[reqId][e.getServer().getId()] < e.getClock() && !log.getEvents().contains(e)) {
                 eventsToSend.add(e);
+                localMessages.add(e.getMsg());
             }
         }
 

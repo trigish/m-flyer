@@ -1,10 +1,12 @@
 package server;
 
+import common.Event;
 import common.Message;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This interface gives limited access to a server through Java RPI.
@@ -23,4 +25,5 @@ public interface RpiServerAccess extends Remote {
     public void syncWith(RpiServerAccess pOtherServer) throws RemoteException;
     public String getTextLine() throws RemoteException;
     public int[][] getTimeTable() throws RemoteException;
+    public List<Event> getUnknownEvents(RpiServerAccess pRequestingServer) throws RemoteException;
 }

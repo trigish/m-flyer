@@ -25,19 +25,19 @@ public class Log {
 
 
    public void handleEvent(Event event) {
-      if (event.isLocal(server.getId())) {
-          ls2d.add(event);
-          updateLocalTT(event);
-      }
-      else {   
-    	  ls2d.insertLog(event.log);
-    	  tt.combineRemoteTT(event);
-    	  arr = tt.GCRemoteTT();
-    	  ls2d.deleteLog(arr);	  
-      }
+
+
+		   ls2d.add(event);
+
+
+
+		   /*ls2d.insertLog(event.log);
+			   tt.combineRemoteTT(event);
+			   arr = tt.GCRemoteTT();
+			   ls2d.deleteLog(arr);*/
        // JobUtil.processJob(event, this);
    }
-   
+   /*
    private void insertLog (Event event) {
 	   for (int i = 0; i<3; i++) {
 		   ls2d[i].add(event.log[i]);
@@ -68,11 +68,11 @@ public class Log {
    }
    
 
-   
+
    private void updateLocalTT(Event event) {
 	   int x = server.getId();
 	   tt[x][x] = event.getClock();
-   }
+   }*/
 
  }
    
