@@ -309,6 +309,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
      */
     public void syncWith(RmiServerAccess pOtherServer) throws RemoteException {
 
+        // get potentially unknown events and merge them as well as the related messages with existing local data
         List<Event> potentiallyUnknownEvents = pOtherServer.getUnknownEvents(this);
         for(Event newEvent : potentiallyUnknownEvents) {
             if(!log.getEvents().contains(newEvent)) { //we might get events we already know about, cause the other site didn't know that we knew. skip that.
@@ -317,8 +318,11 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
             }
         }
 
+        //update time tables
         combineRemoteTT(pOtherServer);
-        //TODO start garbage collection
+
+        //start garbage collection
+        garbageCollectLog();
     }
 
     /**
@@ -364,5 +368,30 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
 
     public int getLocalTime() throws RemoteException {
         return tt[id][id];
+    }
+
+
+    private void garbageCollectLog() throws RemoteException {
+
+        //part 1: Get the minimum value of each column of tt = minimum knowledge for each site
+        int x; // delete entry after x
+        int [] arr = new int[numServers]; //arr[i] min value of i-th column.
+
+        for (int j=0; j<numServers; j++) {
+            int min = this.tt[0][j];
+
+            for (int i=1; i<numServers; i++) {
+                min = Math.min(min, this.tt[i][j]);
+            }
+            arr[j] = min;
+        }
+
+        //part 2: remove all elements older than minimum
+        List <Event> ls2d = log.getEvents();
+
+        for (Event i : ls2d) {
+            if (i.getClock() <= arr[i.getServer().getId()])
+                ls2d.remove(i);
+        }
     }
 }
