@@ -37,12 +37,12 @@ public class User implements Serializable {
         //create user instances only once
         if(allInstances == null) {
             allInstances = new LinkedList<User>();
-            allInstances.add(new User(0, "A", 0));
-            allInstances.add(new User(1, "B", 1));
-            allInstances.add(new User(2, "C", 2));
-            allInstances.add(new User(3, "D", 3));
-            allInstances.add(new User(4, "E", 4));
-            allInstances.add(new User(5, "F", 0));
+            allInstances.add(new User(0, "A1", 0));
+            allInstances.add(new User(1, "A2", 0));
+            allInstances.add(new User(2, "B", 1));
+            allInstances.add(new User(3, "C", 2));
+            //allInstances.add(new User(4, "D", 3));
+            //allInstances.add(new User(5, "E", 4));
         }
 
         return allInstances;

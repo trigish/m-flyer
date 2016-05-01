@@ -23,7 +23,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
     public final static int ID_ASIA = 3;
     public final static int ID_AFRICA = 4;
 
-    public final static int numServers = 5;
+    public final static int numServers = 3;
 
     /**
      * This STATIC(!) list contains all existing servers.
@@ -78,8 +78,8 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
             globalServerList[ID_AMERICA] = new Server(ID_AMERICA, "America", "localhost"); //TODO IP
             globalServerList[ID_AUSTRALIA] = new Server(ID_AUSTRALIA, "Australia", "localhost"); //TODO IP
             globalServerList[ID_EUROPE] = new Server(ID_EUROPE, "Europe", "localhost"); //TODO IP
-            globalServerList[ID_ASIA] = new Server(ID_ASIA, "Asia", "localhost"); //TODO IP
-            globalServerList[ID_AFRICA] = new Server(ID_AFRICA, "Africa", "localhost"); //TODO IP
+            //globalServerList[ID_ASIA] = new Server(ID_ASIA, "Asia", "localhost"); //TODO IP
+            //globalServerList[ID_AFRICA] = new Server(ID_AFRICA, "Africa", "localhost"); //TODO IP
 
             //try to replace each dummy server by the real one
             String serverStatus;
