@@ -309,9 +309,9 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
      */
     public void syncWith(RmiServerAccess pOtherServer) throws RemoteException {
 
-        List<Event> unknownEvents = pOtherServer.getUnknownEvents(this);
-        for(Event newEvent : unknownEvents) {
-            if(!log.getEvents().contains(newEvent)) {
+        List<Event> potentiallyUnknownEvents = pOtherServer.getUnknownEvents(this);
+        for(Event newEvent : potentiallyUnknownEvents) {
+            if(!log.getEvents().contains(newEvent)) { //we might get events we already know about, cause the other site didn't know that we knew. skip that.
                 log.handleEvent(newEvent);
                 localMessages.add(newEvent.getMsg());
             }
