@@ -13,7 +13,7 @@ public class Client {
 
     ClientGUI gui;
     User currentUser;
-    RpiServerAccess currentServer;
+    RmiServerAccess currentServer;
 
     private Client() throws Exception {
         currentUser = User.getAllInstances().getFirst();
@@ -97,7 +97,7 @@ public class Client {
      * Tell the current serer to sync its messages with pOtherServer.
      * @param pOtherServer
      */
-    public void syncCurrentServerWith(RpiServerAccess pOtherServer) throws RemoteException{
+    public void syncCurrentServerWith(RmiServerAccess pOtherServer) throws RemoteException{
 
         //only do something if pOtherServer is really a different server (this makes gui handling easier)
         if(pOtherServer.getId() != currentServer.getId()) {

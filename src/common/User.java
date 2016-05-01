@@ -64,7 +64,7 @@ public class User implements Serializable {
         return closestServerId;
     }
 
-    public RpiServerAccess getClosestServer() throws Exception {
+    public RmiServerAccess getClosestServer() throws Exception {
         return Server.getInstanceFromGlobalList(this.getClosestServerId());
     }
 }

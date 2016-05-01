@@ -11,19 +11,19 @@ import java.util.List;
 /**
  * This interface gives limited access to a server through Java RPI.
  */
-public interface RpiServerAccess extends Remote {
+public interface RmiServerAccess extends Remote {
 
-    //actually private, but public because of RpiServerAccess interface
+    //actually private, but public because of RmiServerAccess interface
 
     public String getRmiAddress() throws RemoteException;
     public String getIpAddress() throws RemoteException;
     public String getName() throws RemoteException;;
-    public void updateServer(RpiServerAccess pServerUpdate) throws Exception;
+    public void updateServer(RmiServerAccess pServerUpdate) throws Exception;
     public void addMessage(Message pMsg) throws RemoteException;
     public LinkedList<Message> getLocalMessages() throws RemoteException;
     public int getId() throws RemoteException;
-    public void syncWith(RpiServerAccess pOtherServer) throws RemoteException;
+    public void syncWith(RmiServerAccess pOtherServer) throws RemoteException;
     public String getTextLine() throws RemoteException;
     public int[][] getTimeTable() throws RemoteException;
-    public List<Event> getUnknownEvents(RpiServerAccess pRequestingServer) throws RemoteException;
+    public List<Event> getUnknownEvents(RmiServerAccess pRequestingServer) throws RemoteException;
 }

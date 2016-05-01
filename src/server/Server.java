@@ -7,7 +7,7 @@ import java.rmi.registry.*;
 import java.util.*;
 import java.lang.*;
 
-public class Server extends UnicastRemoteObject implements RpiServerAccess {
+public class Server extends UnicastRemoteObject implements RmiServerAccess {
 
     private int id;
     private String name;
@@ -35,7 +35,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Also this is static, there should be a separate data instance for each
      * program execution (on a different machine).
      */
-    private static RpiServerAccess[] globalServerList = null;
+    private static RmiServerAccess[] globalServerList = null;
 
     /**
      * Create new server object.
@@ -63,7 +63,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * @param pId The id of the requested server.
      * @return Either a dummy for the requested server or the "real" server (on a different machine).
      */
-    public static RpiServerAccess getInstanceFromGlobalList(int pId) throws Exception{
+    public static RmiServerAccess getInstanceFromGlobalList(int pId) throws Exception{
 
         //validate parameters
         if(pId < 0 || pId >= numServers) {
@@ -74,7 +74,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         if(globalServerList == null) {
 
             //init all possible servers with dummy data
-            globalServerList = new RpiServerAccess[numServers];
+            globalServerList = new RmiServerAccess[numServers];
             globalServerList[ID_AMERICA] = new Server(ID_AMERICA, "America", "localhost"); //TODO IP
             globalServerList[ID_AUSTRALIA] = new Server(ID_AUSTRALIA, "Australia", "localhost"); //TODO IP
             globalServerList[ID_EUROPE] = new Server(ID_EUROPE, "Europe", "localhost"); //TODO IP
@@ -85,7 +85,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
             String serverStatus;
             for(int i=0; i < numServers; i++) {
                 try {
-                    globalServerList[i] = (RpiServerAccess) Naming.lookup(globalServerList[i].getRmiAddress());
+                    globalServerList[i] = (RmiServerAccess) Naming.lookup(globalServerList[i].getRmiAddress());
                     serverStatus = "active";
                 }
                 catch(NotBoundException e) {
@@ -104,7 +104,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         return globalServerList[pId];
     }
 
-    public static RpiServerAccess[] getAllInstances() throws Exception {
+    public static RmiServerAccess[] getAllInstances() throws Exception {
 
         //ensure intitialization
         getInstanceFromGlobalList(0);
@@ -156,7 +156,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * This address needs to be used to lookup or bind this object to the Java RMI mechanism.
      * @return
      */
-    public String getRmiAddress() { //actually private, but public because of RpiServerAccess interface
+    public String getRmiAddress() { //actually private, but public because of RmiServerAccess interface
         return "//" + this.ipAddress + "/server" + this.id;
     }
 
@@ -167,7 +167,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
     private void broadcast(Server pServerUpdate) {
         for(int i=0;i < numServers; i++) {
             try {
-                RpiServerAccess other = getInstanceFromGlobalList(i);
+                RmiServerAccess other = getInstanceFromGlobalList(i);
                 other.updateServer(pServerUpdate);
             }
             catch(Exception e) {
@@ -180,7 +180,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Replace the current version of pServerUpdate with the given one.
      * @param pServerUpdate
      */
-    public void updateServer(RpiServerAccess pServerUpdate) throws Exception { //actually private, but public because of RpiServerAccess interface {
+    public void updateServer(RmiServerAccess pServerUpdate) throws Exception { //actually private, but public because of RmiServerAccess interface {
         getInstanceFromGlobalList(0); //ensure that data has been initialized
         globalServerList[pServerUpdate.getId()] = pServerUpdate;
     }
@@ -296,7 +296,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
 
     /**
      * This method is just a "copy" of the toString method.
-     * It's needed because the real toString method is not available in the RpiServerAccess.
+     * It's needed because the real toString method is not available in the RmiServerAccess.
      * @return
      */
     public String getTextLine() throws RemoteException {
@@ -307,7 +307,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Sync all local messages (bidirectionally) with pOtherServer.
      * @param pOtherServer
      */
-    public void syncWith(RpiServerAccess pOtherServer) throws RemoteException {
+    public void syncWith(RmiServerAccess pOtherServer) throws RemoteException {
 
         List<Event> unknownEvents = pOtherServer.getUnknownEvents(this);
         for(Event newEvent : unknownEvents) {
@@ -323,7 +323,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * @param pRequestingServer
      * @return
      */
-    public List<Event> getUnknownEvents(RpiServerAccess pRequestingServer) throws RemoteException {
+    public List<Event> getUnknownEvents(RmiServerAccess pRequestingServer) throws RemoteException {
 
         LinkedList<Event> eventsToSend = new LinkedList<Event>();
         int reqId = pRequestingServer.getId();
@@ -338,7 +338,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         return eventsToSend;
     }
 
-    private void combineRemoteTT (RpiServerAccess pRemoteServer) throws RemoteException {
+    private void combineRemoteTT (RmiServerAccess pRemoteServer) throws RemoteException {
 
         int[][] foreignTT = pRemoteServer.getTimeTable();
         int remoteId = pRemoteServer.getId();

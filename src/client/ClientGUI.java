@@ -45,7 +45,7 @@ public class ClientGUI {
                                                               boolean isSelected,
                                                               boolean cellHasFocus) {
                     try {
-                        RpiServerAccess server = (RpiServerAccess) value;
+                        RmiServerAccess server = (RmiServerAccess) value;
                         value = server.getTextLine();
                     }
                     catch(Exception e) {
@@ -117,7 +117,7 @@ public class ClientGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    controller.syncCurrentServerWith((RpiServerAccess) comboServer.getSelectedItem());
+                    controller.syncCurrentServerWith((RmiServerAccess) comboServer.getSelectedItem());
                 }
                 catch (RemoteException eListener) {
                     System.out.println(eListener.getMessage());
@@ -157,7 +157,7 @@ public class ClientGUI {
      * This is not(!) the listener of the user combobox!
      * @param pNewServer
      */
-    public void switchServer(RpiServerAccess pNewServer) {
+    public void switchServer(RmiServerAccess pNewServer) {
         try {
             labelCurrentServer.setText("" + pNewServer.getTextLine() + ", RMI " + (pNewServer instanceof Server ? "off" : "on"));
         }

@@ -1,8 +1,6 @@
 package common;
 
 import server.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Event {
 	private int clock;
@@ -18,7 +16,7 @@ public class Event {
 		clock = pServer.getLocalTime();
 	}
 
-	public RpiServerAccess getServer() {
+	public RmiServerAccess getServer() {
 		return server;
 	}
 
