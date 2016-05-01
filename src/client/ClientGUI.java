@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
 
+import java.awt.event.KeyAdapter;
 import java.rmi.RemoteException;
 import java.util.*;
 
@@ -81,6 +82,21 @@ public class ClientGUI {
         frame.setMinimumSize(frame.getSize());
         frame.setVisible(true);
 
+
+        //send messages "on Enter"
+        int condition = JComponent.WHEN_FOCUSED;
+        InputMap iMap = inputMsg.getInputMap(condition);
+        ActionMap aMap = inputMsg.getActionMap();
+        String enter = "enter";
+        iMap.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0), enter);
+        aMap.put(enter, new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                btnPost.doClick();
+            }
+        });
+
         btnPost.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -124,6 +140,8 @@ public class ClientGUI {
                     System.out.println(eListener.getMessage());
                 }
             }
+        });
+        inputMsg.addKeyListener(new KeyAdapter() {
         });
     }
 
