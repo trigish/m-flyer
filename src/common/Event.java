@@ -10,8 +10,6 @@ public class Event implements Serializable {
 	private Message msg;
 	private RmiServerAccess server; // == msg.getAuthor().getClosestServer()
 
-	//List<List<String>> ls2d = new ArrayList<List<String>>();
-	//tt = new String [3][3];
 
 	public Event (Message pMsg, RmiServerAccess pServer) throws RemoteException {
 		msg = pMsg;
@@ -54,7 +52,6 @@ public class Event implements Serializable {
 		catch (Exception e) {
 			res = false;
 		}
-
 
 		return res;
 	}
