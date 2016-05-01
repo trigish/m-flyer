@@ -38,4 +38,24 @@ public class Event implements Serializable {
 	public Message getMsg() {
 		return msg;
 	}
+
+	/**
+	 * Compare two events. Events are equal if their local times equals as well as their server id.
+	 * @param other
+	 * @return
+     */
+	public boolean equals(Object other) {
+		Event otherEvent = (Event) other;
+
+		boolean res;
+		try {
+			res =otherEvent.getClock() == this.getClock() && otherEvent.getServer().getId() == this.getServer().getId();
+		}
+		catch (Exception e) {
+			res = false;
+		}
+
+
+		return res;
+	}
 }
