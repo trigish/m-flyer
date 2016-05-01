@@ -22,4 +22,5 @@ public interface RpiServerAccess extends Remote {
     public int getId() throws RemoteException;
     public void syncWith(RpiServerAccess pOtherServer) throws RemoteException;
     public String getTextLine() throws RemoteException;
+    public int[][] getTimeTable() throws RemoteException;
 }

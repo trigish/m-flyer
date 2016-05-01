@@ -5,6 +5,7 @@ import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.*;
 import java.util.*;
+import java.lang.*;
 
 public class Server extends UnicastRemoteObject implements RpiServerAccess {
 
@@ -13,6 +14,8 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
     private String ipAddress;
     private boolean active;
     private LinkedList<Message> localMessages;
+    private Log log;
+    private int[][] tt;
 
     public final static int ID_AMERICA = 0;
     public final static int ID_AUSTRALIA = 1;
@@ -51,6 +54,8 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
         active = false;
 
         localMessages = new LinkedList<Message>();
+        tt = new int [numServers][numServers];
+        log = new Log(this);
     }
 
     /**
@@ -254,10 +259,16 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * @param pMsg
      */
     public void addMessage(Message pMsg) {
+
+        //store the message locally
         localMessages.add(pMsg);
 
-        //TODO extend log
-        //TODO init sync??
+        //increase local time (needed for new event)
+        tt[id][id]++;
+
+        //create new event and add it to the log
+        Event localEvent = new Event(pMsg, this);
+        log.handleEvent(localEvent);
     }
 
     /**
@@ -295,7 +306,37 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Sync all local messages (bidirectionally) with pOtherServer.
      * @param pOtherServer
      */
-    public void syncWith(RpiServerAccess pOtherServer) {
-        //TODO implement
+    public void syncWith(RpiServerAccess pOtherServer) throws RemoteException {
+
+        List<Message> unknownEvents = pOtherServer.getUnknownEvents(this);
+
+        combineRemoteTT(pOtherServer);
+
+    }
+
+    private void combineRemoteTT (RpiServerAccess pRemoteServer) throws RemoteException {
+
+        int[][] foreignTT = pRemoteServer.getTimeTable();
+        int remoteId = pRemoteServer.getId();
+
+        //element-wise maximum of both timetables
+        for (int i=0; i<3; i++) {
+            for (int j=0; j<3; j++) {
+                this.tt[i][j] = java.lang.Math.max(foreignTT[i][j], this.tt[i][j]);
+            }
+        }
+
+        //choose element-wise maximum of local id-th row and remote remoteId-th row
+        for(int j=0; j < numServers;j++) {
+            this.tt[id][j] = java.lang.Math.max(this.tt[id][j], foreignTT[remoteId][j]);
+        }
+    }
+
+    public int[][] getTimeTable() {
+        return tt;
+    }
+
+    public int getLocalTime() {
+        return tt[id][id];
     }
 }
