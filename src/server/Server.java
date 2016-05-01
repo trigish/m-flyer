@@ -180,7 +180,7 @@ public class Server extends UnicastRemoteObject implements RpiServerAccess {
      * Replace the current version of pServerUpdate with the given one.
      * @param pServerUpdate
      */
-    public void updateServer(Server pServerUpdate) throws Exception { //actually private, but public because of RpiServerAccess interface {
+    public void updateServer(RpiServerAccess pServerUpdate) throws Exception { //actually private, but public because of RpiServerAccess interface {
         getInstanceFromGlobalList(0); //ensure that data has been initialized
         globalServerList[pServerUpdate.getId()] = pServerUpdate;
     }

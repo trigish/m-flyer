@@ -18,7 +18,7 @@ public interface RpiServerAccess extends Remote {
     public String getRmiAddress() throws RemoteException;
     public String getIpAddress() throws RemoteException;
     public String getName() throws RemoteException;;
-    public void updateServer(Server pServerUpdate) throws Exception;
+    public void updateServer(RpiServerAccess pServerUpdate) throws Exception;
     public void addMessage(Message pMsg) throws RemoteException;
     public LinkedList<Message> getLocalMessages() throws RemoteException;
     public int getId() throws RemoteException;
