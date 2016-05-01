@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public class Event implements Serializable {
-	private int clock;
+	private int clock; //current time
 	private Message msg;
 	private RmiServerAccess server; // == msg.getAuthor().getClosestServer()
 

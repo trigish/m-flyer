@@ -78,8 +78,8 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
             globalServerList[ID_AMERICA] = new Server(ID_AMERICA, "America", "localhost"); //TODO IP
             globalServerList[ID_AUSTRALIA] = new Server(ID_AUSTRALIA, "Australia", "localhost"); //TODO IP
             globalServerList[ID_EUROPE] = new Server(ID_EUROPE, "Europe", "localhost"); //TODO IP
-            //globalServerList[ID_ASIA] = new Server(ID_ASIA, "Asia", "localhost"); //TODO IP
-            //globalServerList[ID_AFRICA] = new Server(ID_AFRICA, "Africa", "localhost"); //TODO IP
+            //globalServerList[ID_ASIA] = new Server(ID_ASIA, "Asia", "localhost");
+            //globalServerList[ID_AFRICA] = new Server(ID_AFRICA, "Africa", "localhost");
 
             //try to replace each dummy server by the real one
             String serverStatus;
@@ -338,6 +338,11 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         return eventsToSend;
     }
 
+    /**
+     * Merge the tt of pRemoteServer into the current local tt.
+     * @param pRemoteServer
+     * @throws RemoteException
+     */
     private void combineRemoteTT (RmiServerAccess pRemoteServer) throws RemoteException {
 
         int[][] foreignTT = pRemoteServer.getTimeTable();
@@ -364,7 +369,10 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         return tt[id][id];
     }
 
-
+    /**
+     * Start garbage collection on current server and remove all elements from the log that are known by all other servers for sure, too.
+     * @throws RemoteException
+     */
     private void garbageCollectLog() throws RemoteException {
 
         //part 1: Get the minimum value of each column of tt = minimum knowledge for each site
