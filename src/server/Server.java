@@ -14,7 +14,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
     private String ipAddress;
     private boolean active;
     private LinkedList<Message> localMessages;
-    private Log log;
+    private LinkedList<Event> log;
     private int[][] tt;
 
     public final static int ID_AMERICA = 0;
@@ -55,7 +55,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
 
         localMessages = new LinkedList<Message>();
         tt = new int [numServers][numServers];
-        log = new Log(this);
+        log = new LinkedList<Event>();
     }
 
     /**
@@ -263,7 +263,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
 
         //create new event and add it to the log
         Event localEvent = new Event(pMsg, this);
-        log.handleEvent(localEvent);
+        log.add(localEvent);
     }
 
     /**
@@ -306,8 +306,8 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         // get potentially unknown events and merge them as well as the related messages with existing local data
         List<Event> potentiallyUnknownEvents = pOtherServer.getUnknownEvents(this);
         for(Event newEvent : potentiallyUnknownEvents) {
-            if(!log.getEvents().contains(newEvent)) { //we might get events we already know about, cause the other site didn't know that we knew. skip that.
-                log.handleEvent(newEvent);
+            if(!log.contains(newEvent)) { //we might get events we already know about, cause the other site didn't know that we knew. skip that.
+                log.add(newEvent);
                 localMessages.add(newEvent.getMsg());
             }
         }
@@ -329,7 +329,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         LinkedList<Event> eventsToSend = new LinkedList<Event>();
         int reqId = pRequestingServer.getId();
 
-        for(Event e : log.getEvents()) {
+        for(Event e : log) {
             if(tt[reqId][e.getServer().getId()] < e.getClock()) {
                 eventsToSend.add(e);
             }
@@ -389,11 +389,9 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         }
 
         //part 2: remove all elements older than minimum
-        List <Event> ls2d = log.getEvents();
-
-        for (Event i : ls2d) {
+        for (Event i : log) {
             if (i.getClock() <= arr[i.getServer().getId()])
-                ls2d.remove(i);
+                log.remove(i);
         }
     }
 }
