@@ -209,7 +209,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
                 Server.start(serverID);
             }
             catch (Exception e) {
-                System.out.println("Error during server start. " + e.getMessage());
+                System.out.println("Error during server start. " + e);
             }
         }
         else
