@@ -350,8 +350,8 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         int remoteId = pRemoteServer.getId();
 
         //element-wise maximum of both timetables
-        for (int i=0; i<3; i++) {
-            for (int j=0; j<3; j++) {
+        for (int i=0; i < numServers; i++) {
+            for (int j=0; j < numServers; j++) {
                 this.tt[i][j] = java.lang.Math.max(foreignTT[i][j], this.tt[i][j]);
             }
         }
