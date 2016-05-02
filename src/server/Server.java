@@ -380,19 +380,25 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         int x; // delete entry after x
         int [] arr = new int[numServers]; //arr[i] min value of i-th column.
 
-        for (int j=0; j<numServers; j++) {
+        for (int j=0; j < numServers; j++) {
             int min = this.tt[0][j];
 
-            for (int i=1; i<numServers; i++) {
+            for (int i=1; i < numServers; i++) {
                 min = Math.min(min, this.tt[i][j]);
             }
             arr[j] = min;
         }
 
         //part 2: remove all elements older than minimum
-        for (Event i : log) {
+        LinkedList<Event> garbage = new LinkedList<Event>();
+        for (Event i : log) { //step one: collect only to prevent inference between iteration and remove operations
             if (i.getClock() <= arr[i.getServer().getId()])
-                log.remove(i);
+                garbage.add(i);
         }
+        for (Event i : garbage) { //step two: remove
+            log.remove(i);
+        }
+
+        System.out.println("Garbage collection on server " + getName() + "(" + getId() + ")" + " removed " + garbage.size() + " events from local log.");
     }
 }
