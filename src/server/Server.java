@@ -307,7 +307,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         // get potentially unknown events and merge them as well as the related messages with existing local data
         List<Event> potentiallyUnknownEvents = pOtherServer.getUnknownEvents(this);
         for(Event newEvent : potentiallyUnknownEvents) {
-            if(!log.contains(newEvent)) { //we might get events we already know about, cause the other site didn't know that we knew. skip that.
+            if(newEvent.getClock() > tt[id][newEvent.getServer().getId()]) { //we might get events we already know about, cause the other site didn't know that we knew. skip that.
                 log.add(newEvent);
                 localMessages.add(newEvent.getMsg());
             }
