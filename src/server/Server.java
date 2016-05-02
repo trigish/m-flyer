@@ -123,28 +123,29 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
 
         try {
             //in order to start a machine, it must be a local instance instead of only a Rpi object => cast
-            Server oldServerObject = (Server) getInstanceFromGlobalList(pServerId);
+            RmiServerAccess serverAccess = (RmiServerAccess) getInstanceFromGlobalList(pServerId);
 
             //exit, if server is already running
-            //TODO actually there is no problem if the server is already running, but there is a problem if oldServerObject
+            //(actually there is no problem if the server is already running, but there is a problem if oldServerObject
             //isn't a local object at all (but instead a remote object from another machine). The latter is indicated by
-            // the attribute "active".
-            if(oldServerObject.active) {
+            // the attribute "active".)
+            if(!(serverAccess instanceof Server) || serverAccess.isActive()) {
                 throw new Exception("Server with id " + pServerId + " could not be started, because it's already running!");
             }
+            Server server = (Server) serverAccess; //if it's not running yet, it's a local Server object
 
             // bind server to the registry so it will be available in the network
-            Naming.rebind(oldServerObject.getRmiAddress(), oldServerObject);
-            System.out.println("New server address: " + oldServerObject.getRmiAddress());
+            Naming.rebind(server.getRmiAddress(), server);
+            System.out.println("New server address: " + server.getRmiAddress());
 
             //set to running
-            oldServerObject.active = true;
+            server.active = true;
 
             //inform all known servers (including oldServerObject itself) about its new status
-            oldServerObject.broadcast(oldServerObject);
+            server.broadcast(server);
 
             //log message
-            System.out.println("Started server " + oldServerObject.getName() );
+            System.out.println("Started server " + server.getName() );
 
         }
         catch(Exception e) {
@@ -245,7 +246,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
      * Check, if this server is running.
      * @return True, if this server is active/running. Otherweise this object is just a dummy.
      */
-    public boolean isActive() {
+    public boolean isActive() throws RemoteException {
         return active;
     }
 

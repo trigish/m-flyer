@@ -27,4 +27,5 @@ public interface RmiServerAccess extends Remote {
     public int[][] getTimeTable() throws RemoteException;
     public List<Event> getUnknownEvents(RmiServerAccess pRequestingServer) throws RemoteException;
     public int getLocalTime() throws RemoteException;
+    public boolean isActive() throws RemoteException;
 }

@@ -11,9 +11,6 @@ public class Message implements Serializable {
     String text;
     User author;
 
-    //TODO implement timestamp
-
-
     public Message(String text, User author) {
         this.text = text;
         this.author = author;

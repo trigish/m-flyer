@@ -156,7 +156,6 @@ public class ClientGUI {
             doc.insertAfterEnd(doc.getCharacterElement(doc.getLength()), "<font size=\"18\"><b>" + pMsg.getAuthor() + ":</b> " + pMsg.getText() + "</font><br>");
         }
         catch(Exception e) {
-            //TODO
         }
     }
 
@@ -183,7 +182,5 @@ public class ClientGUI {
         catch (Exception e){
 
         }
-
-        //TODO we might also block the server-related item in the combobox, but this isn't possible out of the box..
     }
 }
