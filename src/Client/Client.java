@@ -19,10 +19,10 @@ public class Client {
     private Client() throws Exception {
         currentUser = User.getAllInstances().getFirst();
         currentServer = currentUser.getClosestServer();
-        ui = new ClientShell(this);
+        ui = new ClientShell(this); //ClientShell
 
         //load already existing messages
-        lookup();
+        //lookup();
 
         //wait for further input
         ui.acceptUserInput();
@@ -86,7 +86,7 @@ public class Client {
             //if this user prefers a different server, refresh the shown messages
             if (oldUser.getClosestServerId() != currentServer.getId()) {
                 ui.switchServer(currentServer);
-                lookup();
+                //lookup();
             }
 
             System.out.println("Switched user from " + oldUser.getName() + " to " + currentUser.getName() + ".");
@@ -110,7 +110,7 @@ public class Client {
             currentServer.syncWith(pOtherServer);
 
             //reload merged messages
-            lookup();
+            //lookup();
         }
     }
 }
