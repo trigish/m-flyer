@@ -78,7 +78,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
             globalServerList = new RmiServerAccess[numServers];
             globalServerList[ID_AMERICA] = new Server(ID_AMERICA, "America", "euca-128-111-84-178.eucalyptus.cloud.eci.ucsb.edu");
             globalServerList[ID_AUSTRALIA] = new Server(ID_AUSTRALIA, "Australia", "euca-128-111-84-240.eucalyptus.cloud.eci.ucsb.edu");
-            globalServerList[ID_EUROPE] = new Server(ID_EUROPE, "Europe", "euca-128-111-84-253.eucalyptus.cloud.eci.ucsb.edu");
+            globalServerList[ID_EUROPE] = new Server(ID_EUROPE, "Europe", "euca-128-111-84-217.eucalyptus.cloud.eci.ucsb.edu");
             //globalServerList[ID_ASIA] = new Server(ID_ASIA, "Asia", "localhost");
             //globalServerList[ID_AFRICA] = new Server(ID_AFRICA, "Africa", "localhost");
 
