@@ -221,9 +221,9 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
                 try {
 
                     // update rmi host
-                    System.out.println("old rmi host: " + System.getProperty("java.rmi.server.hostname") );
+                    /*System.out.println("old rmi host: " + System.getProperty("java.rmi.server.hostname") );
                     System.setProperty("java.rmi.server.hostname", Server.getInstanceFromGlobalList(serverID).getIpAddress());
-                    System.out.println("new rmi host: " + System.getProperty("java.rmi.server.hostname") );
+                    System.out.println("new rmi host: " + System.getProperty("java.rmi.server.hostname") );*/
 
                     LocateRegistry.createRegistry(1099);
                     System.out.println("RMI registry inited.");
