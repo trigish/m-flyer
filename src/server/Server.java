@@ -46,7 +46,7 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
      * @param pIpAddress The ip address of this server.
      */
     private Server(int pId, String pName, String pIpAddress) throws RemoteException {
-        super(1099); //rmic
+        super(0); //rmic
 
         //use given params
         id = pId;
