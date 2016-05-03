@@ -6,6 +6,7 @@ import java.rmi.server.*;
 import java.rmi.registry.*;
 import java.util.*;
 import java.lang.*;
+import java.net.*;
 
 public class Server extends UnicastRemoteObject implements RmiServerAccess {
 
@@ -148,8 +149,26 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
             System.out.println("Started server " + server.getName() );
 
         }
+        catch(AccessException e) {
+            System.out.println("Error during server start. Not allowed to use current ip address." + e);
+
+            // show all ip addresses of this computer
+            System.out.println("This computer has the following local ip addresses assigned:");
+            Enumeration ips = NetworkInterface.getNetworkInterfaces();
+            while(ips.hasMoreElements())
+            {
+                NetworkInterface n = (NetworkInterface) ips.nextElement();
+                Enumeration ee = n.getInetAddresses();
+                while (ee.hasMoreElements())
+                {
+                    InetAddress i = (InetAddress) ee.nextElement();
+                    System.out.println(i.getHostAddress());
+                }
+            }
+            System.out.println("");
+        }
         catch(Exception e) {
-            System.out.println("Error during server start. Probably this server object is not a local one." + e.getMessage());
+            System.out.println("Error during server start. Probably this server object is not a local one." + e);
         }
     }
 
@@ -198,18 +217,19 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
 
                 //init registry
                 try {
+
                     LocateRegistry.createRegistry(1099);
                     System.out.println("RMI registry inited.");
-                } catch (RemoteException e) {
+                } catch (RemoteException e1) {
                     //no problem. all init work is already done.
-                    System.out.println("RMI registry already started.");
+                    System.out.println("RMI registry already started." + e1);
                 }
 
                 int serverID = Integer.parseInt(args[0]);
                 Server.start(serverID);
             }
-            catch (Exception e) {
-                System.out.println("Error during server start. " + e);
+            catch (Exception e2) {
+                System.out.println("Error during server start. " + e2);
             }
         }
         else
