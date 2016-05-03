@@ -215,8 +215,15 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
         {
             try {
 
+                int serverID = Integer.parseInt(args[0]);
+
                 //init registry
                 try {
+
+                    // update rmi host
+                    System.out.println("old rmi host: " + System.getProperty("java.rmi.server.hostname") );
+                    System.setProperty("java.rmi.server.hostname", Server.getInstanceFromGlobalList(serverID).getIpAddress());
+                    System.out.println("new rmi host: " + System.getProperty("java.rmi.server.hostname") );
 
                     LocateRegistry.createRegistry(1099);
                     System.out.println("RMI registry inited.");
@@ -225,7 +232,6 @@ public class Server extends UnicastRemoteObject implements RmiServerAccess {
                     System.out.println("RMI registry already started." + e1);
                 }
 
-                int serverID = Integer.parseInt(args[0]);
                 Server.start(serverID);
             }
             catch (Exception e2) {
