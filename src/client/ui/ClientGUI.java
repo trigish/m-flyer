@@ -1,5 +1,6 @@
-package client;
+package client.ui;
 
+import client.Client;
 import common.*;
 import server.*;
 
@@ -16,7 +17,7 @@ import java.util.*;
 /**
  * This graphical user interface will be shown on client side only.
  */
-public class ClientGUI {
+public class ClientGUI extends ClientUI {
     private JPanel contentPane;
     private JPanel firstRow;
     private JPanel centeredRow;
@@ -30,11 +31,8 @@ public class ClientGUI {
     private JLabel labelCurrentServer;
     private JButton syncButton;
 
-    private Client controller;
-
     public ClientGUI(Client pController) {
-
-        controller = pController;
+        super(pController);
 
         //load available servers
         try {
@@ -182,5 +180,9 @@ public class ClientGUI {
         catch (Exception e){
 
         }
+    }
+
+    public void acceptUserInput() {
+        // GUI can accept user input at each time
     }
 }

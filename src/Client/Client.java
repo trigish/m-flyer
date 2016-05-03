@@ -1,5 +1,6 @@
 package client;
 
+import client.ui.*;
 import common.*;
 import server.*;
 
@@ -11,17 +12,20 @@ import java.rmi.registry.LocateRegistry;
  */
 public class Client {
 
-    ClientGUI gui;
+    ClientUI ui;
     User currentUser;
     RmiServerAccess currentServer;
 
     private Client() throws Exception {
         currentUser = User.getAllInstances().getFirst();
         currentServer = currentUser.getClosestServer();
-        gui = new ClientGUI(this);
+        ui = new ClientShell(this);
 
         //load already existing messages
         lookup();
+
+        //wait for further input
+        ui.acceptUserInput();
     }
 
     /**
@@ -48,22 +52,22 @@ public class Client {
     }
 
     /**
-     * Post a new message by requesting the server to save it as well as showing it in the gui.
+     * Post a new message by requesting the server to save it as well as showing it in the ui.
      * @param pText
      */
     public void postMessage(String pText) throws RemoteException {
 
         Message msg = new Message(pText, currentUser);
-        gui.showMessage(msg);
+        ui.showMessage(msg);
 
         currentServer.addMessage(msg);
     }
 
     /**
-     * Receive all messages that are locally saved on the current server and show them in the gui.
+     * Receive all messages that are locally saved on the current server and show them in the ui.
      */
     public void lookup() throws RemoteException {
-        gui.replaceMessages(currentServer.getLocalMessages());
+        ui.replaceMessages(currentServer.getLocalMessages());
     }
 
     /**
@@ -81,7 +85,7 @@ public class Client {
 
             //if this user prefers a different server, refresh the shown messages
             if (oldUser.getClosestServerId() != currentServer.getId()) {
-                gui.switchServer(currentServer);
+                ui.switchServer(currentServer);
                 lookup();
             }
 
@@ -99,7 +103,7 @@ public class Client {
      */
     public void syncCurrentServerWith(RmiServerAccess pOtherServer) throws RemoteException{
 
-        //only do something if pOtherServer is really a different server (this makes gui handling easier)
+        //only do something if pOtherServer is really a different server (this makes ui handling easier)
         if(pOtherServer.getId() != currentServer.getId()) {
 
             //send actual request
