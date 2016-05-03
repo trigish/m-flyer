@@ -43,7 +43,7 @@ public class Client {
             Client client = new Client();
         }
         catch(Exception e) {
-            System.out.println("Error during Client runtime. " + e.getMessage());
+            System.out.println("Error during Client runtime. " + e);
         }
     }
 
